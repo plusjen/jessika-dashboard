@@ -24,4 +24,4 @@ def ping():
 
 if __name__ == "__main__":
     #app.run(host='0.0.0.0', port = int(os.environ.get('PORT', 3080)))
-    app.run(port=80)
+    app.run(debug=True, port=80)
