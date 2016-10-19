@@ -4,7 +4,7 @@
 </head>
 <body>
 
-
+<!--
 <script src="https://cdn.auth0.com/js/lock/10.4/lock.min.js"></script>
 <script>
   var domain = 'plusjen.auth0.com';
@@ -21,6 +21,33 @@
 
 </script>
 <button onclick="lock.show();">Login</button>
+-->
+
+
+
+<div id="root" style="width: 320px; margin: 40px auto; padding: 10px; border-style: dashed; border-width: 1px; box-sizing: border-box;">
+    embedded area
+</div>
+
+<script src="https://cdn.auth0.com/js/lock/10.4/lock.min.js"></script>
+<script>
+  var domain = 'plusjen.auth0.com';
+  var clientID = 'FDSnNGm4lw0l6qsBO38H6t5MHzBfl3F8';
+
+  var lock = new Auth0Lock(clientID, domain, {
+      container: 'root',
+      auth: {
+        redirectUrl: 'https://YOUR_APP/callback',
+        responseType: 'code',
+        params: {
+          scope: 'openid email' // Learn about scopes: https://auth0.com/docs/scopes
+      }
+    }
+  });
+  lock.show();
+</script>
+
+
 
 </body>
 </html>
