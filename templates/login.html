@@ -1,52 +1,30 @@
 <html>
 <head>
-<title>Title</title>
+    <title>Title</title>
 </head>
 <body>
 
-<!--
-<script src="https://cdn.auth0.com/js/lock/10.4/lock.min.js"></script>
-<script>
-  var domain = 'plusjen.auth0.com';
-  var clientID = 'FDSnNGm4lw0l6qsBO38H6t5MHzBfl3F8';
+    <div id="root" style="width: 320px; margin: 40px auto; padding: 10px; border-style: dashed; border-width: 1px; box-sizing: border-box;">
+        embedded area
+    </div>
 
-    var lock = new Auth0Lock(clientID, domain);
-    lock.show({
-      focusInput: false,
-      popup: true,
-    }, function (err, profile, token) {
-      alert(err);
-    });
+    <script src="https://cdn.auth0.com/js/lock/10.4/lock.min.js"></script>
+    <script>
+      var domain = {{ namespace }};
+      var clientID = {{ client_id }};
 
-
-</script>
-<button onclick="lock.show();">Login</button>
--->
-
-
-
-<div id="root" style="width: 320px; margin: 40px auto; padding: 10px; border-style: dashed; border-width: 1px; box-sizing: border-box;">
-    embedded area
-</div>
-
-<script src="https://cdn.auth0.com/js/lock/10.4/lock.min.js"></script>
-<script>
-  var domain = 'plusjen.auth0.com';
-  var clientID = 'FDSnNGm4lw0l6qsBO38H6t5MHzBfl3F8';
-
-  var lock = new Auth0Lock(clientID, domain, {
-      container: 'root',
-      auth: {
-        redirectUrl: 'https://whispering-mesa-86421.herokuapp.com/callback',
-        responseType: 'code',
-        params: {
-          scope: 'openid email' // Learn about scopes: https://auth0.com/docs/scopes
-      }
-    }
-  });
-  lock.show();
-</script>
-
+      var lock = new Auth0Lock(clientID, domain, {
+          container: 'root',
+          auth: {
+            redirectUrl: 'https://whispering-mesa-86421.herokuapp.com/callback',
+            responseType: 'code',
+            params: {
+              scope: 'openid email' // Learn about scopes: https://auth0.com/docs/scopes
+          }
+        }
+      });
+      lock.show();
+    </script>
 
 
 </body>

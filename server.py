@@ -8,10 +8,12 @@ env = None
 
 try:
     env = Dotenv('./.env')
-    client_id = env["AUTH0_CLIENT_ID"]
-    client_secret = env["AUTH0_CLIENT_SECRET"]
 except IOError:
   env = os.environ
+  
+client_id     = env["AUTH0_CLIENT_ID"]
+client_secret = env["AUTH0_CLIENT_SECRET"]
+namespace     = env["AUTH0_NAMESPACE"]  
 
 app = Flask(__name__)
 
@@ -24,7 +26,7 @@ def callback():
 # Controllers API
 @app.route("/")
 def ping():
-    return render_template('login.html')
+    return render_template('login.html', client_id=client_id, namespace=namespace)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port = int(os.environ.get('PORT', 3080)))
