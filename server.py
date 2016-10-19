@@ -16,9 +16,13 @@ except IOError:
 app = Flask(__name__)
 
 
+@app.route("/callback")
+def callback():
+    return "Login successfull"
+
 
 # Controllers API
-@app.route("/ping")
+@app.route("/")
 def ping():
     return render_template('login.html')
 
