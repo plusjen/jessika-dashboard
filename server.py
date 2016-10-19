@@ -9,7 +9,7 @@ env = None
 try:
     env = Dotenv('./.env')
 except IOError:
-  env = os.environ
+    env = os.environ
   
 client_id     = env["AUTH0_CLIENT_ID"]
 client_secret = env["AUTH0_CLIENT_SECRET"]
