@@ -31,6 +31,10 @@ def requires_auth(f):
   return decorated
 
 
+@app.route('/public/<path:filename>')
+def static_files(filename):
+    return send_from_directory('./public', filename)
+
 # Controllers API
 @app.route("/")
 def home():
