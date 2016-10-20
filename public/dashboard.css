@@ -1,3 +1,13 @@
+
+
+a.user-profile {
+    white-space: nowrap;
+}
+
+.inside {
+    display: inline-block;
+}
+
 .info-number .badge {
     font-size: 10px;
     font-weight: normal;
