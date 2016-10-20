@@ -6,7 +6,7 @@
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
-        <link href="/public/app.css" rel="stylesheet">
+        <link href="/public/dashboard.css" rel="stylesheet">
   </head>
   
   <body class="nav-md">
@@ -33,7 +33,8 @@
               
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img class="img-circle" src="{{user['picture']}}" alt=""><span >{{user['nickname']}}</span>
+                    <img class="img-circle img-responsive" src="{{user['picture']}}" alt="">
+                    <span class="">{{user['nickname']}}</span>
                     <span class=" fa fa-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
