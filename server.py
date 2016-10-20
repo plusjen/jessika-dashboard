@@ -14,12 +14,13 @@ try:
 except IOError:
   env = os.environ
 
+
 app = Flask(__name__, static_url_path= '')
 app.secret_key = '@mgonto'
 app.debug = True
 
-# Requires authentication annotation
 
+# Requires authentication annotation
 def requires_auth(f):
   @wraps(f)
   def decorated(*args, **kwargs):
@@ -35,14 +36,19 @@ def requires_auth(f):
 def home():
     return render_template('home.html', env=env)
 
+
 @app.route("/dashboard")
 @requires_auth
 def dashboard():
     return render_template('dashboard.html', user=session['profile'])
 
-@app.route('/public/<path:filename>')
-def static_files(filename):
-    return send_from_directory('./public', filename)
+
+@app.route('/logout')
+def logout():
+    # remove the username from the session if it's there
+    session.pop('profile', None)
+    return redirect('/')
+
 
 @app.route('/callback')
 def callback_handling():
@@ -52,11 +58,11 @@ def callback_handling():
 
   token_url = "https://{domain}/oauth/token".format(domain=env["AUTH0_DOMAIN"])
   token_payload = {
-    'client_id' : env['AUTH0_CLIENT_ID'], \
-    'client_secret' : env['AUTH0_CLIENT_SECRET'], \
-    'redirect_uri' : env['AUTH0_CALLBACK_URL'], \
-    'code' : code, \
-    'grant_type': 'authorization_code' \
+    'client_id'     : env['AUTH0_CLIENT_ID'],
+    'client_secret' : env['AUTH0_CLIENT_SECRET'],
+    'redirect_uri'  : env['AUTH0_CALLBACK_URL'],
+    'code'          : code,
+    'grant_type'    : 'authorization_code'
   }
 
   token_info = requests.post(token_url, data=json.dumps(token_payload), headers = json_header).json()
@@ -70,5 +76,9 @@ def callback_handling():
 
   return redirect('/dashboard')
 
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port = int(os.environ.get('PORT', 3000)))
+    
+    
