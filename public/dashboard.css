@@ -38,3 +38,8 @@ a.user-profile {
     border-radius: 10px;
 }
 
+.profile-pic {
+    width: 32px;
+    border-width: 3px;
+    padding: 2px;
+}
