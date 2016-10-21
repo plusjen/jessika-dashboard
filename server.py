@@ -46,9 +46,9 @@ def home():
 def dashboard():
 
     user_data = {
-        'labels': json.dumps(["Oct1", "Oct4", "Oct7", "Oct10", "Oct13", "Oct16", "Oct19", "Oct22", "Oct25", "Oct28",  "Oct31"]),
-        'axis0' : json.dumps([203,156,99,251,305,247, 300, 260, 210, 270, 200]),
-        'axis1' : json.dumps([303,196,28,201,150,120, 200, 230, 260, 230, 200]),
+        'labels': ["Oct1", "Oct4", "Oct7", "Oct10", "Oct13", "Oct16", "Oct19", "Oct22", "Oct25", "Oct28",  "Oct31"],
+        'axis0' : [203,156,99,251,305,247, 300, 260, 210, 270, 200],
+        'axis1' : [303,196,28,201,150,120, 200, 230, 260, 230, 200],
         
         'trr': '$250.00',
         'tcr': 59,
@@ -56,7 +56,7 @@ def dashboard():
         'art': '34 sec'
     }
 
-    return render_template('dashboard.html', user=session['profile'], user_data=user_data)
+    return render_template('dashboard.html', user=session['profile'], user_data=json.dumps(user_data))
 
 
 @app.route('/logout')
