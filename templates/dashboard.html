@@ -17,7 +17,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.min.js"></script>
 
         <script>
-          var dataLabels = {{user_data['labels'] | safe}};
+          var dataLabels = {{user_data['labels'] | tojson}};
           var dataAxis0  = {{user_data['axis0']  | safe}};
           var dataAxis1  = {{user_data['axis0']  | safe}};
         </script>

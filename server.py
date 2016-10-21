@@ -56,7 +56,7 @@ def dashboard():
         'art': '34 sec'
     }
 
-    return render_template('dashboard.html', user=session['profile'], user_data=json.dumps(user_data))
+    return render_template('dashboard.html', user=session['profile'], user_data=user_data)
 
 
 @app.route('/logout')
