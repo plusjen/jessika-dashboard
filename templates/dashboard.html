@@ -18,8 +18,8 @@
 
         <script>
           var dataLabels = {{user_data['labels'] | tojson}};
-          var dataAxis0  = {{user_data['axis0']  | safe}};
-          var dataAxis1  = {{user_data['axis0']  | safe}};
+          var dataAxis0  = {{user_data['axis0']  | tojson}};
+          var dataAxis1  = {{user_data['axis1']  | tojson}};
         </script>
 
         <link href="/public/dashboard.css" rel="stylesheet">
