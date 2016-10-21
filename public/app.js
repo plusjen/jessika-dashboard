@@ -3,6 +3,7 @@ $(document).ready(function() {
         theme: {
             logo: '../public/jessikaio_logo_gradient_small.png',
             primaryColor: '#6daedb',
+            title: ""
         },
         container: 'lock-box',
         auth: {
