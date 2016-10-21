@@ -1,16 +1,29 @@
-<html>
+<!doctype html>
+<html lang="en">
   <head>
   
         <title>jessika.io</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <script type="text/javascript" src="//use.typekit.net/iws6ohy.js"></script>
+        <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
         <!-- font awesome from BootstrapCDN -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.min.js"></script>
+
+        <script>
+          var dataLabels = {{user_data['labels']}};
+          var dataAxis0  = {{user_data['axis0']}};
+          var dataAxis1  = {{user_data['axis0']}};
+        </script>
 
         <link href="/public/dashboard.css" rel="stylesheet">
+        <script src="/public/chart.js"></script>
   </head>
   
   <body class="nav-md">
@@ -59,33 +72,38 @@
           </div>
         </div>
         
-        <div style="min-height: 800px;" class="right_col" role="main">
+        <div style="min-height: 600px;" class="right_col" role="main">
           <!-- top tiles -->
           <div class="row tile_count">
             <div class="col-md-3 tile_stats_count">
               <div class="count_top"> Total</div>
               <div class="count_top">Revenue Recovered</div>
-              <div class="count">$250.00</div>
+              <div class="count">{{user_data['trr']}}</div>
             </div>
             
             <div class="col-md-3 tile_stats_count">
               <div class="count_top"> Total</div>
               <div class="count_top">Customers Reached</div>
-              <div class="count">2500</div>
+              <div class="count">{{user_data['tcr']}}</div>
             </div>
             
             <div class="col-md-3 tile_stats_count">
               <div class="count_top"> Total</div>
               <div class="count_top">Conversations</div>
-              <div class="count">2500</div>
+              <div class="count">{{user_data['tc']}}</div>
             </div>
             
             <div class="col-md-3 tile_stats_count">
               <div class="count_top">Average </div>
               <div class="count_top">Response Time</div>
-              <div class="count">25 sec</div>
+              <div class="count">{{user_data['art']}}</div>
             </div>
-            
+          </div>
+          
+          <div class="row">
+            <canvas id="chart"></canvas>
+          </div>
+          
         </div>
         
       </div>
