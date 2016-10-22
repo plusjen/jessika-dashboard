@@ -36,6 +36,9 @@ $(document).ready(function() {
                     fontColor: "#67a9cf", 
                     fontSize: 16
                   },
+                  gridLines: {
+                    display: false,
+                  },
                   ticks: {
                     fontColor: "#67a9cf", 
                   }
