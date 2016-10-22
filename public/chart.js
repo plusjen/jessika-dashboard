@@ -60,7 +60,7 @@ $(document).ready(function() {
           };
 
     var context = document.getElementById('chart').getContext('2d');
-    context.canvas.width = 1000;
+    context.canvas.width = 900;
     context.canvas.height = 200;
     var lineChart = new Chart(context, {type: 'line', data: data, options: options});
 
