@@ -18,6 +18,8 @@ except IOError:
 app = Flask(__name__, static_url_path= '')
 app.secret_key = '@mgonto'
 app.debug = True
+app.config['SQLALCHEMY_DATABASE_URI'] = env['DATABASE_URL']
+db = SQLAlchemy(app)
 
 
 # Requires authentication annotation
