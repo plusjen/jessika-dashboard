@@ -99,10 +99,10 @@ def dashboard():
         
         client_id = response[0]
     
-        queries = ['SELECT amount FROM processed_payments WHERE contact_id = %s', 
-         'SELECT DISTINCT from_phonenumber FROM consumers JOIN outgoingmessages ON phonenumber WHERE client_id = %s',
-         'SELECT DISTINCT to_phonenumber FROM consumers JOIN incomingmessages ON phonenumber WHERE client_id = %s', 
-         '']
+        queries = ['SELECT amount FROM processed_payments WHERE consumer_id = %s', 
+                   'SELECT DISTINCT from_phonenumber FROM consumers JOIN outgoingmessages ON phonenumber WHERE client_id = %s',
+                   'SELECT DISTINCT to_phonenumber FROM consumers JOIN incomingmessages ON phonenumber WHERE client_id = %s', 
+                   '']
          
         for query in queries:
             data = fetch_data(conn, query, (client_id, ))[0]
@@ -113,7 +113,7 @@ def dashboard():
         ]
         [['messageid'], ['conversationid'], ['phonenumber'], ['message'], ['timestamp'], ['from_phonenumber']]
         [['messageid'], ['conversationid'], ['phonenumber'], ['message'], ['timestamp'], ['to_phonenumber']]
-        []
+        [id | confirmation_id | consumer_id | amount | method |         timestamp]
         '''
     
         '''
