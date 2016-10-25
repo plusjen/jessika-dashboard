@@ -2,6 +2,7 @@ import os
 import json
 
 import requests
+import urlparse
 import psycopg2
 from functools import wraps
 from flask import Flask, request, jsonify, session, redirect, render_template, send_from_directory
