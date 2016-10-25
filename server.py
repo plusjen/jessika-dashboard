@@ -89,12 +89,33 @@ def dashboard():
         'tc' : 92,
         'art': '34 sec'
     }
-    query = '''SELECT * FROM dashboard_users WHERE user_id = %s '''
+    query = '''SELECT client_id FROM dashboard_users WHERE user_id = %s '''
+    
+    ex = '''select column_name from information_schema.columns where table_name= %s'''
+    s = ''
+    for name in ['consumers', 'outgoingmessages', 'incomingmessages', 'processed_payment']:
+        s += str(fetch_data(conn, ex, (name, )))
     
     if fetch_data(conn, query, (session['profile']['user_id'], )):
+    
+        '''
+        For revenue recovered:
+            - just query the processed_payment table using the client_id
+        For total customers reached:
+            - query the consumers table using the client_id then do a join on outgoingmessages 
+              using the consumers phonenumber.  the count unique # of consumers
+        For total conversations:
+            - Same as above but instead of joining on the outgoingmessages, 
+              join on the incoming messages.  count unique
+        For Average Response Time:
+            - query the consumers table using the client_id, 
+              then do a join on outgoingmessages and incomingmessage.  
+              get the difference in timestamp. (incoming - outgoing) and compute the average
+        '''
+        
         return render_template('dashboard.html', user=session['profile'], user_data=user_data)
     else:
-        return render_template('failure.html')
+        return s #render_template('failure.html')
 
 
 @app.route('/logout')
