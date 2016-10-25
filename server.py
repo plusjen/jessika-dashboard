@@ -94,7 +94,7 @@ def dashboard():
     if fetch_data(conn, query, (session['profile']['user_id'], )):
         return render_template('dashboard.html', user=session['profile'], user_data=user_data)
     else:
-        return "Forbidden"
+        return render_template('failure.html')
 
 
 @app.route('/logout')
