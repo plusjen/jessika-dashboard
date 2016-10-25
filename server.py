@@ -57,9 +57,9 @@ def fetch_data(conn, query, params):
 def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-    if 'profile' not in session:
-        return redirect('/')
-    return f(*args, **kwargs)
+        if 'profile' not in session:
+            return redirect('/')
+        return f(*args, **kwargs)
 
     return decorated
 
