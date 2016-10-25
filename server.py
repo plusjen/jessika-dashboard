@@ -89,14 +89,32 @@ def dashboard():
         'tc' : 92,
         'art': '34 sec'
     }
+    
+    
     query = '''SELECT client_id FROM dashboard_users WHERE user_id = %s '''
+    user_id = session['profile']['user_id']
     
-    ex = '''select column_name from information_schema.columns where table_name= %s'''
-    s = ''
-    for name in ['consumers', 'outgoingmessages', 'incomingmessages', 'processed_payment']:
-        s += str(fetch_data(conn, ex, (name, )))
+    response = fetch_data(conn, query, (user_id, ))
+    if response:
+        
+        client_id = response[0]
     
-    if fetch_data(conn, query, (session['profile']['user_id'], )):
+        queries = ['SELECT amount FROM processed_payments WHERE contact_id = %s', 
+         'SELECT DISTINCT from_phonenumber FROM consumers JOIN outgoingmessages ON phonenumber WHERE client_id = %s',
+         'SELECT DISTINCT to_phonenumber FROM consumers JOIN incomingmessages ON phonenumber WHERE client_id = %s', 
+         '']
+         
+        for query in queries:
+            data = fetch_data(conn, query, (client_id, ))[0]
+        
+        '''
+        [['id'], ['firstname'], ['lastname'], ['phonenumber'], ['amount_owed'], 
+         ['recurring_billing'], ['recurring_day'], ['timestamp'], ['client_id']
+        ]
+        [['messageid'], ['conversationid'], ['phonenumber'], ['message'], ['timestamp'], ['from_phonenumber']]
+        [['messageid'], ['conversationid'], ['phonenumber'], ['message'], ['timestamp'], ['to_phonenumber']]
+        []
+        '''
     
         '''
         For revenue recovered:
@@ -115,7 +133,7 @@ def dashboard():
         
         return render_template('dashboard.html', user=session['profile'], user_data=user_data)
     else:
-        return s #render_template('failure.html')
+        return render_template('failure.html')
 
 
 @app.route('/logout')
