@@ -94,3 +94,7 @@ label {
   padding: 100px 0;
 }
 
+.auth0-lock-widget-container {
+  border: 6px solid #eee !important;
+  border-radius: 12px;
+}
