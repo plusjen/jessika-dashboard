@@ -97,15 +97,16 @@ def dashboard():
     response = fetch_data(conn, query, (user_id, ))
     if response:
         
-        client_id = response[0]
+        client_id = response[0]['client_id']
     
-        queries = ['SELECT amount FROM processed_payments WHERE consumer_id = %d', 
-                   'SELECT DISTINCT from_phonenumber FROM consumers JOIN outgoingmessages ON phonenumber WHERE client_id = %d',
-                   'SELECT DISTINCT to_phonenumber FROM consumers JOIN incomingmessages ON phonenumber WHERE client_id = %d', 
-                   'SELECT amount FROM processed_payments WHERE consumer_id = %d'] # TODO
+        queries = ['SELECT amount FROM processed_payments WHERE consumer_id = %s', 
+                   'SELECT DISTINCT from_phonenumber FROM consumers JOIN outgoingmessages ON phonenumber WHERE client_id = %s',
+                   'SELECT DISTINCT to_phonenumber FROM consumers JOIN incomingmessages ON phonenumber WHERE client_id = %s', 
+                   'SELECT amount FROM processed_payments WHERE consumer_id = %s'] # TODO
          
         for query in queries:
             data = fetch_data(conn, query, (client_id, ))[0]
+            print(data)
         
         '''
         [['id'], ['firstname'], ['lastname'], ['phonenumber'], ['amount_owed'], 
