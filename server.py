@@ -2,9 +2,11 @@ import os
 import json
 
 import requests
+import psycopg2
 from functools import wraps
 from flask import Flask, request, jsonify, session, redirect, render_template, send_from_directory
 from dotenv import Dotenv
+
 
 # Load Env variables
 env = None
@@ -18,8 +20,16 @@ except IOError:
 app = Flask(__name__, static_url_path= '')
 app.secret_key = '@mgonto'
 app.debug = True
-app.config['SQLALCHEMY_DATABASE_URI'] = env['DATABASE_URL']
-db = SQLAlchemy(app)
+
+urlparse.uses_netloc.append("postgres")
+url = urlparse.urlparse(os.environ["DATABASE_URL"])
+conn = psycopg2.connect(
+   database=url.path[1:],
+   user=url.username,
+   password=url.password,
+   host=url.hostname,
+   port=url.port
+)
 
 
 # Requires authentication annotation
