@@ -100,8 +100,8 @@ def dashboard():
         client_id = response[0]['client_id']
     
         queries = ['SELECT amount FROM processed_payments WHERE consumer_id = %s', 
-                   'SELECT DISTINCT from_phonenumber FROM consumers JOIN outgoingmessages ON phonenumber WHERE client_id = %s',
-                   'SELECT DISTINCT to_phonenumber FROM consumers JOIN incomingmessages ON phonenumber WHERE client_id = %s', 
+                   'SELECT COUNT(DISTINCT from_phonenumber) FROM consumers JOIN outgoingmessages ON phonenumber WHERE client_id = %s',
+                   'SELECT COUNT(DISTINCT to_phonenumber) FROM consumers JOIN incomingmessages ON phonenumber WHERE client_id = %s', 
                    'SELECT amount FROM processed_payments WHERE consumer_id = %s'] # TODO
          
         for query in queries:
