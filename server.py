@@ -6,7 +6,6 @@ import requests
 import urlparse
 import psycopg2
 import psycopg2.extras
-from dateutil import rrule, parser
 from functools import wraps
 from flask import Flask, request, jsonify, session, redirect, render_template, send_from_directory
 from dotenv import Dotenv
