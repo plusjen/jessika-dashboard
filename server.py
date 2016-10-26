@@ -1,10 +1,12 @@
 import os
 import json
 
+import tempfile
 import requests
 import urlparse
 import psycopg2
 import psycopg2.extras
+from dateutil import rrule, parser
 from functools import wraps
 from flask import Flask, request, jsonify, session, redirect, render_template, send_from_directory
 from dotenv import Dotenv
@@ -41,6 +43,17 @@ conn = psycopg2.connect(
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+# temporary
+user_data = {
+        'labels': ["Oct1", "Oct4", "Oct7", "Oct10", "Oct13", "Oct16", "Oct19", "Oct22", "Oct25", "Oct28",  "Oct31"],
+        'axis0' : [203,156,99,251,305,247, 300, 260, 210, 270, 200],
+        'axis1' : [303,196,28,201,150,120, 200, 230, 260, 230, 200],
+        
+        'trr': '$250.00',
+        'tcr': 59,
+        'tc' : 92,
+        'art': '34 sec'
+    }
 
 def fetch_data(conn, query, params):
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -79,34 +92,38 @@ def home():
 @requires_auth
 def dashboard():
 
-    user_data = {
-        'labels': ["Oct1", "Oct4", "Oct7", "Oct10", "Oct13", "Oct16", "Oct19", "Oct22", "Oct25", "Oct28",  "Oct31"],
-        'axis0' : [203,156,99,251,305,247, 300, 260, 210, 270, 200],
-        'axis1' : [303,196,28,201,150,120, 200, 230, 260, 230, 200],
-        
-        'trr': '$250.00',
-        'tcr': 59,
-        'tc' : 92,
-        'art': '34 sec'
-    }
+    cur = conn.cursor()
     
+    cur.execute(query, params)
+    data = cur.fetchall()
     
-    query = '''SELECT client_id FROM dashboard_users WHERE user_id = %s '''
     user_id = session['profile']['user_id']
+    query = '''SELECT client_id FROM dashboard_users WHERE user_id = %s '''
+    cur.execute(query, (user_id, ))
+    response = cur.fetchone()
     
-    response = fetch_data(conn, query, (user_id, ))
     if response:
         
-        client_id = response[0]['client_id']
-    
-        queries = ['SELECT amount FROM processed_payments WHERE consumer_id = %s', 
-                   'SELECT COUNT(DISTINCT from_phonenumber) FROM consumers JOIN outgoingmessages ON phonenumber WHERE client_id = %s',
-                   'SELECT COUNT(DISTINCT to_phonenumber) FROM consumers JOIN incomingmessages ON phonenumber WHERE client_id = %s', 
-                   'SELECT amount FROM processed_payments WHERE consumer_id = %s'] # TODO
+        client_id = response[0]
+        query = '''SELECT phonenumber FROM consumers WHERE client_id = %s '''
+        cur.execute(query, (client_id, ))
+        response = cur.fetchone()
+        phone = response[0]
+        
+        params  = {'client_id': client_id, 'phone': phone, }
+        names   = ['trr', 'tcr', 'tc' , 'art']
+        formatters = ["${:.2f}", "{}", "{}", "{} sec"]
+        queries = ['SELECT amount FROM processed_payments WHERE consumer_id = %(client_id)s', 
+                   'SELECT COUNT(DISTINCT from_phonenumber) FROM outgoingmessages WHERE phonenumber = %(phone)s',
+                   'SELECT COUNT(DISTINCT to_phonenumber) FROM incomingmessages WHERE phonenumber = %(phone)s', 
+                   'SELECT amount FROM processed_payments WHERE consumer_id = %(client_id)s'] # TODO
          
-        for query in queries:
-            data = fetch_data(conn, query, (client_id, ))[0]
-            print(data)
+        for name, query, formatter in zip(names, queries, formatters):
+            cur.execute(query, params)
+            response = cur.fetchone()
+            user_data[name] = formatter.format(response[0])
+        
+        'SELECT DATE(timestamp), COUNT(DISTINCT conversationid), COUNT(DISTINCT messageid) FROM outgoingmessages UNION incomingmessages WHERE phonenumber = %(phone)s GROUP BY 1 ORDER BY 1'
         
         '''
         [['id'], ['firstname'], ['lastname'], ['phonenumber'], ['amount_owed'], 
@@ -132,6 +149,11 @@ def dashboard():
               get the difference in timestamp. (incoming - outgoing) and compute the average
         '''
         
+        fp, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
+        json.dump(user_data, fp)
+        
+        session['profile']['user-data-json'] = json_tmp
+        
         return render_template('dashboard.html', user=session['profile'], user_data=user_data)
     else:
         return render_template('failure.html')
@@ -139,6 +161,9 @@ def dashboard():
 
 @app.route('/logout')
 def logout():
+    # remove tmp json file with user's data
+    if os.path.exists(session['profile']['user-data-json']):
+        os.remove(session['profile']['user-data-json'])
     # remove the username from the session if it's there
     session.pop('profile', None)
     return redirect('/')
