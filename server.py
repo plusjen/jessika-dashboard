@@ -113,8 +113,9 @@ def dashboard():
         
         'SELECT DATE(timestamp), COUNT(DISTINCT conversationid), COUNT(DISTINCT messageid) FROM outgoingmessages UNION incomingmessages WHERE phonenumber = %(phone)s GROUP BY 1 ORDER BY 1'
         
-        fp, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
-        json.dump(user_data, fp)
+        handler, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
+        with open(json_tmp, 'w') as fp:
+            json.dump(user_data, fp)
         
         session['profile']['user-data-json'] = json_tmp
         
