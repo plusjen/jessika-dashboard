@@ -5,9 +5,6 @@
         <title>jessika.io</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
-        <script type="text/javascript" src="//use.typekit.net/iws6ohy.js"></script>
-        <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-
         <!-- font awesome from BootstrapCDN -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
@@ -75,28 +72,45 @@
         <div style="min-height: 600px;" class="right_col" role="main">
           <!-- top tiles -->
           <div class="row tile_count">
-            <div class="col-md-3 tile_stats_count">
+            <div class="col-md-2 tile_stats_count">
               <div class="count_top"> Total</div>
               <div class="count_top">Revenue Recovered</div>
               <div class="count">{{user_data['trr']}}</div>
             </div>
             
-            <div class="col-md-3 tile_stats_count">
+            <div class="col-md-2 tile_stats_count">
               <div class="count_top"> Total</div>
               <div class="count_top">Customers Reached</div>
               <div class="count">{{user_data['tcr']}}</div>
             </div>
             
-            <div class="col-md-3 tile_stats_count">
+            <div class="col-md-2 tile_stats_count">
               <div class="count_top"> Total</div>
               <div class="count_top">Conversations</div>
               <div class="count">{{user_data['tc']}}</div>
             </div>
             
-            <div class="col-md-3 tile_stats_count">
+            <div class="col-md-2 tile_stats_count">
               <div class="count_top">Average </div>
               <div class="count_top">Response Time</div>
               <div class="count">{{user_data['art']}}</div>
+            </div>
+          </div>
+          
+          <div class="panel">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right bottom-column">
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" id="chart-dropdown-btn" 
+                        type="button" data-toggle="dropdown">this month
+                <span class="caret"></span></button>
+                <ul class="dropdown-menu pull-right" id="chart-dropdown">
+                </ul>
+              </div>
+            </div>
+            
+            <div class="col-md-2 text-center bottom-column">
+             <a href="#"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
             </div>
           </div>
           

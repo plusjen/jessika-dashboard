@@ -2,7 +2,6 @@ $(document).ready(function() {
     
     var data = {
 	    labels : dataLabels,
-	    
 	    datasets : [
 		    {
 			    borderColor : "#67a9cf",
@@ -63,5 +62,19 @@ $(document).ready(function() {
     context.canvas.width = 900;
     context.canvas.height = 200;
     var lineChart = new Chart(context, {type: 'line', data: data, options: options});
+
+    var dropdownItems = ['this week', 'last week', 'this month', 'last month', 'this quater', 'this year'];
+    
+    $.each(dropdownItems, function(ind, item) {
+      $('#chart-dropdown').append( $('<li>').append( $('<a>').attr('href','#').append(item) ) );
+    });
+    
+    $(".dropdown-menu li a").click(function(){
+        var selText = $(this).text();
+        $(this).parents('.dropdown').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+        // change chart
+    });
+    
+    
 
 })

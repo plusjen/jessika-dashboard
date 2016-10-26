@@ -154,6 +154,17 @@ ol, ul {
     width: 100%;
 }
 
+.bottom-column
+{
+  float: none;
+  display: table-cell;
+  vertical-align: bottom;
+}
+
+.panel {
+    margin-top: -30px;
+}
+
 #right_nav {
     padding-top: 3px;
     padding-right: 30px;
@@ -168,6 +179,10 @@ ol, ul {
     display: inline-block;
     vertical-align: middle;
     float: none;
+}
+
+#chart-dropdown-btn {
+  width: 8em !important;
 }
 
 #chart {
