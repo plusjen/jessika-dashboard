@@ -117,7 +117,7 @@ def dashboard():
         with open(json_tmp, 'w') as fp:
             json.dump(user_data, fp)
         
-        session['profile']['user-data-json'] = json_tmp
+        session['user-data-json'] = json_tmp
         
         return render_template('dashboard.html', user=session['profile'], user_data=user_data)
     else:
@@ -127,8 +127,9 @@ def dashboard():
 @app.route('/logout')
 def logout():
     # remove tmp json file with user's data
-    if os.path.exists(session['profile']['user-data-json']):
-        os.remove(session['profile']['user-data-json'])
+    if os.path.exists(session['user-data-json']):
+        os.remove(session['user-data-json'])
+    session.pop('user-data-json', None)
     # remove the username from the session if it's there
     session.pop('profile', None)
     return redirect('/')
