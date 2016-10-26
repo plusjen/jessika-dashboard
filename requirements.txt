@@ -3,4 +3,3 @@ dotenv
 requests
 gunicorn
 psycopg2
-dateutil
