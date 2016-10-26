@@ -55,14 +55,6 @@ user_data = {
         'art': '34 sec'
     }
 
-def fetch_data(conn, query, params):
-    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    
-    cur.execute(query, params)
-    data = cur.fetchall()
-    
-    return data
-
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -94,9 +86,6 @@ def dashboard():
 
     cur = conn.cursor()
     
-    cur.execute(query, params)
-    data = cur.fetchall()
-    
     user_id = session['profile']['user_id']
     query = '''SELECT client_id FROM dashboard_users WHERE user_id = %s '''
     cur.execute(query, (user_id, ))
@@ -124,30 +113,6 @@ def dashboard():
             user_data[name] = formatter.format(response[0])
         
         'SELECT DATE(timestamp), COUNT(DISTINCT conversationid), COUNT(DISTINCT messageid) FROM outgoingmessages UNION incomingmessages WHERE phonenumber = %(phone)s GROUP BY 1 ORDER BY 1'
-        
-        '''
-        [['id'], ['firstname'], ['lastname'], ['phonenumber'], ['amount_owed'], 
-         ['recurring_billing'], ['recurring_day'], ['timestamp'], ['client_id']
-        ]
-        [['messageid'], ['conversationid'], ['phonenumber'], ['message'], ['timestamp'], ['from_phonenumber']]
-        [['messageid'], ['conversationid'], ['phonenumber'], ['message'], ['timestamp'], ['to_phonenumber']]
-        [id | confirmation_id | consumer_id | amount | method |         timestamp]
-        '''
-    
-        '''
-        For revenue recovered:
-            - just query the processed_payment table using the client_id
-        For total customers reached:
-            - query the consumers table using the client_id then do a join on outgoingmessages 
-              using the consumers phonenumber.  the count unique # of consumers
-        For total conversations:
-            - Same as above but instead of joining on the outgoingmessages, 
-              join on the incoming messages.  count unique
-        For Average Response Time:
-            - query the consumers table using the client_id, 
-              then do a join on outgoingmessages and incomingmessage.  
-              get the difference in timestamp. (incoming - outgoing) and compute the average
-        '''
         
         fp, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
         json.dump(user_data, fp)
