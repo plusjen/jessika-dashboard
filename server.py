@@ -132,7 +132,7 @@ def dashboard():
                        FROM incomingmessages 
                        WHERE phonenumber = %(phone)s 
                        GROUP BY 1 
-                   )
+                   ) t
                    GROUP BY 1 ORDER BY 1'''
         cur.execute(query, params)
         response = cur.fetchall()
