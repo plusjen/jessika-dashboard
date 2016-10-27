@@ -92,19 +92,25 @@ def dashboard():
     
     if response:
         
-        client_id = response[0]
+        client = response[0]
+        query = '''SELECT view_client_id FROM dashboard_permissions WHERE client_id = %s '''
+        cur.execute(query, (client, ))
+        response = cur.fetchone()
+        clients = response[0]
+        return str(response)
+        
+        client_id = client
         query = '''SELECT phonenumber FROM consumers WHERE client_id = %s '''
         cur.execute(query, (client_id, ))
         response = cur.fetchone()
         phone = response[0]
         
         params  = {'client_id': client_id, 'phone': phone, }
-        names   = ['trr', 'tcr', 'tc' , 'art']
-        formatters = ["${:.2f}", "{}", "{}", "{} sec"]
+        names   = ['trr', 'tcr', 'tc']
+        formatters = ["${:.2f}", "{}", "{}"]
         queries = ['SELECT amount FROM processed_payments WHERE consumer_id = %(client_id)s', 
                    'SELECT COUNT(DISTINCT from_phonenumber) FROM outgoingmessages WHERE phonenumber = %(phone)s',
-                   'SELECT COUNT(DISTINCT to_phonenumber) FROM incomingmessages WHERE phonenumber = %(phone)s', 
-                   'SELECT amount FROM processed_payments WHERE consumer_id = %(client_id)s'] # TODO
+                   'SELECT COUNT(DISTINCT to_phonenumber) FROM incomingmessages WHERE phonenumber = %(phone)s'] 
         
         for name, query, formatter in zip(names, queries, formatters):
             cur.execute(query, params)
