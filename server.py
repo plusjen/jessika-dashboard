@@ -94,7 +94,7 @@ def dashboard():
         
         client = response[0]
         query = '''SELECT view_client_id FROM dashboard_permissions WHERE client_id = %s '''
-        cur.execute(query)
+        cur.execute(query, (client, ))
         response = cur.fetchall()
         clients = [item[0] for item in response]
         
