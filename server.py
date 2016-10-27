@@ -119,7 +119,8 @@ def dashboard():
         query = '''SELECT DATE(timestamp), COUNT(DISTINCT conversationid), COUNT(DISTINCT messageid) FROM outgoingmessages 
                    UNION ALL
                    SELECT DATE(timestamp), COUNT(DISTINCT conversationid), COUNT(DISTINCT messageid) FROM incomingmessages 
-                   WHERE phonenumber = %(phone)s GROUP BY 1 ORDER BY 1'''
+                   WHERE phonenumber = %(phone)s 
+                   GROUP BY DATE(timestamp) ORDER BY DATE(timestamp)'''
         cur.execute(query, params)
         response = cur.fetchall()
         return str(response)
