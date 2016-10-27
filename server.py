@@ -116,7 +116,11 @@ def dashboard():
             response = cur.fetchone()
             user_data[name] = formatter.format(response[0] if response else 0)
         
-        'SELECT DATE(timestamp), COUNT(DISTINCT conversationid), COUNT(DISTINCT messageid) FROM outgoingmessages UNION incomingmessages WHERE phonenumber = %(phone)s GROUP BY 1 ORDER BY 1'
+        query = 'SELECT DATE(timestamp), COUNT(DISTINCT conversationid), COUNT(DISTINCT messageid) FROM outgoingmessages UNION incomingmessages WHERE phonenumber = %(phone)s GROUP BY 1 ORDER BY 1'
+        cur.execute(query, params)
+        response = cur.fetchall()
+        return str(response)
+        
         
         handler, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
         with open(json_tmp, 'w') as fp:
