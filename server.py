@@ -93,12 +93,13 @@ def dashboard():
     if response:
         
         client = response[0]
-        query = '''SELECT view_client_id FROM dashboard_permissions WHERE client_id = %s '''
-        cur.execute(query, (client, ))
-        response = cur.fetchone()
+        query = '''SELECT client_id, view_client_id FROM dashboard_permissions'''
+        cur.execute(query)
+        response = cur.fetchall()
+        return str(response)
         clients = response[0]
         
-        client_id = 5
+        client_id = 3
         query = '''SELECT phonenumber FROM consumers WHERE client_id = %s '''
         cur.execute(query, (client_id, ))
         response = cur.fetchone()
