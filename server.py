@@ -114,7 +114,7 @@ def dashboard():
         for name, query, formatter in zip(names, queries, formatters):
             cur.execute(query, params)
             response = cur.fetchone()
-            #user_data[name] = formatter.format(response[0])
+            user_data[name] = formatter.format(response[0])
         
         'SELECT DATE(timestamp), COUNT(DISTINCT conversationid), COUNT(DISTINCT messageid) FROM outgoingmessages UNION incomingmessages WHERE phonenumber = %(phone)s GROUP BY 1 ORDER BY 1'
         
