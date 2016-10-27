@@ -126,12 +126,12 @@ def dashboard():
                        
                        UNION ALL
                        
-                       SELECT DATE(timestamp) AS date, 
+                       SELECT DATE(timestamp) AS thedate, 
                               COUNT(DISTINCT conversationid) AS conversations, 
                               COUNT(DISTINCT messageid) AS messages
                        FROM incomingmessages 
-                       GROUP BY 1 
                        WHERE phonenumber = %(phone)s 
+                       GROUP BY 1 
                    )
                    GROUP BY 1 ORDER BY 1'''
         cur.execute(query, params)
