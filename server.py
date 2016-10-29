@@ -100,8 +100,10 @@ def dashboard():
         
         client_id = 5
         query = '''SELECT phonenumber FROM consumers WHERE client_id = %s '''
+        query = '''SELECT id, client_id, phonenumber FROM consumers '''
         cur.execute(query, (client_id, ))
-        response = cur.fetchone()
+        response = cur.fetchall()
+        return str(response)
         phone = response[0]
         
         params  = {'client_id': client_id, 'phone': phone, }
