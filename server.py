@@ -98,7 +98,7 @@ def dashboard():
         response = cur.fetchall()
         clients = [item[0] for item in response]
         
-        client_id = 3
+        client_id = 5
         query = '''SELECT phonenumber FROM consumers WHERE id = %s '''
         cur.execute(query, (client_id, ))
         response = cur.fetchone()
