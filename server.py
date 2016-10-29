@@ -103,6 +103,7 @@ def dashboard():
         cur.execute(query, (client_id, ))
         response = cur.fetchone()
         phone = response[0]
+        return str(response) + "  " +  str(phone)
         
         params  = {'client_id': client_id, 'phone': phone, }
         names   = ['trr', 'tcr', 'tc']
