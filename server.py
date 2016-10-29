@@ -103,7 +103,6 @@ def dashboard():
         cur.execute(query, (client_id, ))
         response = cur.fetchone()
         phone = response[0]
-        return str(response) + "  " +  str(phone)
         
         params  = {'client_id': client_id, 'phone': phone, }
         names   = ['trr', 'tcr', 'tc']
@@ -116,7 +115,8 @@ def dashboard():
             cur.execute(query, params)
             response = cur.fetchone()
             user_data[name] = formatter.format(response[0] if response else 0)
-        
+            
+        return str(user_data)                    
         query = '''SELECT thedate, SUM(conversations), SUM(messages) FROM (
                        SELECT DATE(timestamp) AS thedate, 
                               COUNT(DISTINCT conversationid) AS conversations, 
@@ -137,7 +137,7 @@ def dashboard():
                    GROUP BY 1 ORDER BY 1'''
         cur.execute(query, params)
         response = cur.fetchall()
-        return str(response)
+        
         
         
         handler, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
