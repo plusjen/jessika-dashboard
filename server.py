@@ -98,12 +98,10 @@ def dashboard():
         response = cur.fetchall()
         clients = [item[0] for item in response]
         
-        client_id = 5
+        client_id = 3
         query = '''SELECT phonenumber FROM consumers WHERE client_id = %s '''
-        query = '''SELECT id, client_id, phonenumber FROM consumers '''
         cur.execute(query, (client_id, ))
-        response = cur.fetchall()
-        return str(response)
+        response = cur.fetchone()
         phone = response[0]
         
         params  = {'client_id': client_id, 'phone': phone, }
@@ -118,7 +116,6 @@ def dashboard():
             response = cur.fetchone()
             user_data[name] = formatter.format(response[0] if response else 0)
             
-        return str(user_data)                    
         query = '''SELECT thedate, SUM(conversations), SUM(messages) FROM (
                        SELECT DATE(timestamp) AS thedate, 
                               COUNT(DISTINCT conversationid) AS conversations, 
