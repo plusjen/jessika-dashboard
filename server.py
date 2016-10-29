@@ -99,7 +99,7 @@ def dashboard():
         clients = [item[0] for item in response]
         
         client_id = 5
-        query = '''SELECT phonenumber FROM consumers WHERE id = %s '''
+        query = '''SELECT phonenumber FROM consumers WHERE client_id = %s '''
         cur.execute(query, (client_id, ))
         response = cur.fetchone()
         phone = response[0]
