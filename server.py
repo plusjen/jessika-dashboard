@@ -98,8 +98,8 @@ def dashboard():
         response = cur.fetchall()
         clients = [item[0] for item in response]
         
-        client_id = 5
-        query = '''SELECT phonenumber FROM consumers WHERE client_id = %s '''
+        client_id = 3
+        query = '''SELECT phonenumber FROM consumers WHERE id = %s '''
         cur.execute(query, (client_id, ))
         response = cur.fetchone()
         phone = response[0]
@@ -107,7 +107,7 @@ def dashboard():
         params  = {'client_id': client_id, 'phone': phone, }
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
-        queries = ['SELECT amount FROM processed_payments WHERE consumer_id = %(client_id)s', 
+        queries = ['SELECT amount FROM processed_payments WHERE id = %(client_id)s', 
                    'SELECT COUNT(DISTINCT from_phonenumber) FROM outgoingmessages WHERE phonenumber = %(phone)s',
                    'SELECT COUNT(DISTINCT to_phonenumber) FROM incomingmessages WHERE phonenumber = %(phone)s'] 
         
