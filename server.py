@@ -107,7 +107,7 @@ def dashboard():
         params  = {'client_id': client_id, 'phone': phone, }
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
-        queries = ['SELECT amount FROM processed_payments WHERE id = %(client_id)s', 
+        queries = ['SELECT amount FROM processed_payments WHERE consumer_id = %(client_id)s', 
                    'SELECT COUNT(DISTINCT from_phonenumber) FROM outgoingmessages WHERE phonenumber = %(phone)s',
                    'SELECT COUNT(DISTINCT to_phonenumber) FROM incomingmessages WHERE phonenumber = %(phone)s'] 
         
