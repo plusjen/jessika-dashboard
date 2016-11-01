@@ -99,17 +99,14 @@ def dashboard():
         clients = [item[0] for item in response]
         
         client_id = 3
-        query = '''SELECT phonenumber FROM consumers WHERE client_id = %s '''
-        cur.execute(query, (client_id, ))
-        response = cur.fetchone()
-        phone = response[0]
-        
-        params  = {'client_id': client_id, 'phone': phone, }
+        params  = {'client_id': client_id, }
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
-        queries = ['SELECT amount FROM processed_payments WHERE consumer_id = %(client_id)s', 
-                   'SELECT COUNT(DISTINCT from_phonenumber) FROM outgoingmessages WHERE phonenumber = %(phone)s',
-                   'SELECT COUNT(DISTINCT to_phonenumber) FROM incomingmessages WHERE phonenumber = %(phone)s'] 
+        queries = ['''SELECT amount FROM processed_payments WHERE consumer_id = %(client_id)s''', 
+                   '''SELECT COUNT(DISTINCT from_phonenumber) FROM outgoingmessages 
+                             JOIN consumers ON phonenumber WHERE client_id = %(client_id)s''',
+                   '''SELECT COUNT(DISTINCT to_phonenumber) FROM incomingmessages 
+                             JOIN consumers ON phonenumber WHERE client_id = %(client_id)s'''] 
         
         for name, query, formatter in zip(names, queries, formatters):
             cur.execute(query, params)
@@ -121,7 +118,7 @@ def dashboard():
                               COUNT(DISTINCT conversationid) AS conversations, 
                               COUNT(DISTINCT messageid) AS messages
                        FROM outgoingmessages 
-                       WHERE phonenumber = %(phone)s 
+                       JOIN consumers ON phonenumber WHERE client_id = %(client_id)s
                        GROUP BY 1
                        
                        UNION ALL
@@ -130,7 +127,7 @@ def dashboard():
                               COUNT(DISTINCT conversationid) AS conversations, 
                               COUNT(DISTINCT messageid) AS messages
                        FROM incomingmessages 
-                       WHERE phonenumber = %(phone)s 
+                       JOIN consumers ON phonenumber WHERE client_id = %(client_id)s
                        GROUP BY 1 
                    ) t
                    GROUP BY 1 ORDER BY 1'''
