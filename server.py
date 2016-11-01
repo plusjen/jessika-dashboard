@@ -104,9 +104,11 @@ def dashboard():
         formatters = ["${:.2f}", "{}", "{}"]
         queries = ['''SELECT amount FROM processed_payments WHERE consumer_id = %(client_id)s''', 
                    '''SELECT COUNT(DISTINCT from_phonenumber) FROM outgoingmessages 
-                             JOIN consumers ON phonenumber WHERE client_id = %(client_id)s''',
+                             JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
+                             WHERE client_id = %(client_id)s''',
                    '''SELECT COUNT(DISTINCT to_phonenumber) FROM incomingmessages 
-                             JOIN consumers ON phonenumber WHERE client_id = %(client_id)s'''] 
+                             JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
+                             WHERE client_id = %(client_id)s'''] 
         
         for name, query, formatter in zip(names, queries, formatters):
             cur.execute(query, params)
@@ -118,7 +120,8 @@ def dashboard():
                               COUNT(DISTINCT conversationid) AS conversations, 
                               COUNT(DISTINCT messageid) AS messages
                        FROM outgoingmessages 
-                       JOIN consumers ON phonenumber WHERE client_id = %(client_id)s
+                       JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
+                       WHERE client_id = %(client_id)s
                        GROUP BY 1
                        
                        UNION ALL
@@ -127,7 +130,8 @@ def dashboard():
                               COUNT(DISTINCT conversationid) AS conversations, 
                               COUNT(DISTINCT messageid) AS messages
                        FROM incomingmessages 
-                       JOIN consumers ON phonenumber WHERE client_id = %(client_id)s
+                       JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
+                       WHERE client_id = %(client_id)s
                        GROUP BY 1 
                    ) t
                    GROUP BY 1 ORDER BY 1'''
