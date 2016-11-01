@@ -116,7 +116,7 @@ def dashboard():
             user_data[name] = formatter.format(response[0] if response else 0)
             
         query = '''SELECT thedate, SUM(conversations), SUM(messages) FROM (
-                       SELECT DATE(timestamp) AS thedate, 
+                       SELECT DATE(outgoingmessages.timestamp) AS thedate, 
                               COUNT(DISTINCT conversationid) AS conversations, 
                               COUNT(DISTINCT messageid) AS messages
                        FROM outgoingmessages 
@@ -126,7 +126,7 @@ def dashboard():
                        
                        UNION ALL
                        
-                       SELECT DATE(timestamp) AS thedate, 
+                       SELECT DATE(incomingmessages.timestamp) AS thedate, 
                               COUNT(DISTINCT conversationid) AS conversations, 
                               COUNT(DISTINCT messageid) AS messages
                        FROM incomingmessages 
