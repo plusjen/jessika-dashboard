@@ -145,7 +145,7 @@ def dashboard():
         
         handler, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
         with open(json_tmp, 'w') as fp:
-            json.dump(user_data, fp, default=date_handler)
+            json.dump(user_data, fp)
         
         session['user-data-json'] = json_tmp.split('/', 2)[2]
         user_data['json_file'] = json_tmp.split('/', 2)[2]
