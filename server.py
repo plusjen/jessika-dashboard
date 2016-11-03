@@ -139,6 +139,8 @@ def dashboard():
         cur.execute(query, params)
         response = cur.fetchall()
         
+        return str(response)
+        
         user_data['labels'] = [x.isoformat() for x, y, z in response]
         user_data['axis0']  = [ int(y) for x, y, z in response]
         user_data['axis1']  = [ int(z) for x, y, z in response]
