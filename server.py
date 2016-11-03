@@ -138,6 +138,8 @@ def dashboard():
         cur.execute(query, params)
         response = cur.fetchall()
         
+        user_data['labels'], user_data['axis0'], user_data['axis1'] = zip(*response)
+        
         handler, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
         with open(json_tmp, 'w') as fp:
             json.dump(user_data, fp)
