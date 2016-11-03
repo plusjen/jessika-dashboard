@@ -116,24 +116,22 @@ def dashboard():
             response = cur.fetchone()
             user_data[name] = formatter.format(response[0] if response else 0)
             
-        query = '''SELECT thedate, SUM(conversations), SUM(messages) FROM (
+        query = '''SELECT thedate, COUNT(DISTINCT conversation), COUNT(DISTINCT message) FROM (
                        SELECT DATE(outgoingmessages.timestamp) AS thedate, 
-                              COUNT(DISTINCT conversationid) AS conversations, 
-                              COUNT(DISTINCT messageid) AS messages
+                              conversationid AS conversation, 
+                              messageid AS message
                        FROM outgoingmessages 
                        JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
                        WHERE client_id = %(client_id)s
-                       GROUP BY 1
                        
                        UNION ALL
                        
                        SELECT DATE(incomingmessages.timestamp) AS thedate, 
-                              COUNT(DISTINCT conversationid) AS conversations, 
-                              COUNT(DISTINCT messageid) AS messages
+                              conversationid AS conversation, 
+                              messageid AS message
                        FROM incomingmessages 
                        JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
                        WHERE client_id = %(client_id)s
-                       GROUP BY 1 
                    ) t
                    GROUP BY 1 ORDER BY 1'''
         cur.execute(query, params)
