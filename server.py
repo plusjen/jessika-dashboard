@@ -1,14 +1,15 @@
 import os
 import json
 
-import datetime
+
 import tempfile
 import requests
 import urlparse
 import psycopg2
 import psycopg2.extras
 from functools import wraps
-from flask import Flask, request, jsonify, session, redirect, render_template, send_from_directory
+from datetime import date, datetime, timedelta
+from flask import Flask, request, session, redirect, render_template, send_from_directory
 from dotenv import Dotenv
 
 
@@ -54,7 +55,44 @@ user_data = {
         'tc' : 92,
         'art': '34 sec'
     }
+    
+# # # # # # # # # # # # # # # # # # # # # # # # # # #    
 
+def get_week(date):
+    """
+    Return the full week (Sunday first) of 
+    the week containing the given date.
+    """
+    # turn sunday into 0, monday into 1, etc.
+    day_idx = (date.weekday() + 1) % 7  
+    sunday = date - timedelta(days=day_idx)
+    theweek = [sunday + timedelta(days=n) for n in range(7)]
+    return theweek
+  
+  
+def get_month(date):
+    year, month = date.year, date.month
+    num_days = calendar.monthrange(year, month)[1]
+    days = [date(year, month, day) for day in range(1, num_days+1)]
+    return days
+    
+
+def get_quarter(date):
+    year = date.year
+    days = []
+    for k in range(1, 4 + 1):
+        month = (date.month - 1) % 4 + k
+        num_days = calendar.monthrange(year, month)[1]
+        for day in range(1, num_days+1):
+            days.append( date(year, month, day) )
+    return days  
+    
+def get_year(date):
+    this_year = date.year
+    next_year = date.year + 1
+    delta = date(this_year, 1, 1) - date(next_year, 1, 1)
+    days = [date(this_year, 1, 1) + timedelta(days=n) for n in range(delta.days + 1)]        
+    return days
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -115,6 +153,7 @@ def dashboard():
             cur.execute(query, params)
             response = cur.fetchone()
             user_data[name] = formatter.format(response[0] if response else 0)
+        
             
         query = '''SELECT thedate, COUNT(DISTINCT conversation), COUNT(DISTINCT message) FROM (
                        SELECT DATE(outgoingmessages.timestamp) AS thedate, 
@@ -137,9 +176,21 @@ def dashboard():
         cur.execute(query, params)
         response = cur.fetchall()
         
-        user_data['labels'] = [x.isoformat() for x, y, z in response]
-        user_data['axis0']  = [ int(y) for x, y, z in response]
-        user_data['axis1']  = [ int(z) for x, y, z in response]
+        now = datetime.now()
+        items = ['this week', 'last week', 'this month', 'last month', 'this quater', 'this year']
+        dates = [now, now - timedelta(days=7), now, now - timedelta(months=1), now, now]
+        generators = [get_week, get_week, get_month, get_month, get_quarter, get_year]
+        formatters = ["%a", "%a", "%m %d", "%m %d", "%m %d", "%m %d"]
+        
+        conv = {x: y for for x, y, z in response}
+        mesg = {x: z for for x, y, z in response}
+        
+        for item, thedate, func, fmt in zip(items, dates, generators, formatters):
+            the_range = func(thedate)
+            labels = [fmt(day) for day in the_range]
+            axis0  = [int(conv.get(day, 0)) for day in the_range]
+            axis1  = [int(mesg.get(day, 0)) for day in the_range]
+            user_data[item] = {'labels': labels, 'axis0': axis0, 'axis1': axis1}
         
         handler, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
         with open(json_tmp, 'w') as fp:

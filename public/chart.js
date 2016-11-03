@@ -3,21 +3,21 @@ $(document).ready(function() {
     var chartHandler = function (jsonData) {
     
         var data = {
-	        labels : jsonData.labels, //dataLabels,
+	        labels : jsonData['this month'].labels, //dataLabels,
 	        datasets : [
 		        {
 			        borderColor : "#67a9cf",
 			        yAxisID: "y-axis-0",
 			        label: "Conversations",
 			        fill : false,
-			        data : jsonData.axis0, //dataAxis0,
+			        data : jsonData['this month'].axis0, //dataAxis0,
 		        }, 
 		        {
 			        borderColor : "#878787",
 			        yAxisID: "y-axis-1",
 			        label: "Messages",
 			        fill : false,
-			        data : jsonData.axis1, //dataAxis1,
+			        data : jsonData['this month'].axis1, //dataAxis1,
 		        }
 	        ]
         };
