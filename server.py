@@ -185,7 +185,7 @@ def dashboard():
                  now, 
                  now] # TODO
         generators = [get_week, get_week, get_month, get_month, get_quarter, get_year]
-        formatters = ["%a", "%a", "%m %d", "%m %d", "%m %d", "%m %d"]
+        formatters = ["%a", "%a", "%b %d", "%b %d", "%b %d", "%m %d"]
         
         conv = {x: y for x, y, z in response}
         mesg = {x: z for x, y, z in response}

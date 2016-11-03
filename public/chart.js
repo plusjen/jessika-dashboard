@@ -1,23 +1,23 @@
 $(document).ready(function() {
 
-    var chartHandler = function (jsonData) {
+    var createChart = function (labels, axis0data, axis1data) {
     
-        var data = {
-	        labels : jsonData['this month'].labels, //dataLabels,
+         var data = {
+	        labels : labels, 
 	        datasets : [
 		        {
 			        borderColor : "#67a9cf",
 			        yAxisID: "y-axis-0",
 			        label: "Conversations",
 			        fill : false,
-			        data : jsonData['this month'].axis0, //dataAxis0,
+			        data : axis0data, 
 		        }, 
 		        {
 			        borderColor : "#878787",
 			        yAxisID: "y-axis-1",
 			        label: "Messages",
 			        fill : false,
-			        data : jsonData['this month'].axis1, //dataAxis1,
+			        data : axis1data,
 		        }
 	        ]
         };
@@ -59,12 +59,20 @@ $(document).ready(function() {
                   }]
                 }
               };
-
+        
         var context = document.getElementById('chart').getContext('2d');
         context.canvas.width = 900;
         context.canvas.height = 200;
         var lineChart = new Chart(context, {type: 'line', data: data, options: options});
+    
+        return lineChart;
+    };  
 
+
+    var chartHandler = function (jsonData) {
+    
+        var item = 'this month';
+        var lineChart = createChart(jsonData[item].labels, jsonData[item].axis0, jsonData[item].axis1);    
         var dropdownItems = ['this week', 'last week', 'this month', 'last month', 'this quater', 'this year'];
         
         $.each(dropdownItems, function(ind, item) {
@@ -74,6 +82,8 @@ $(document).ready(function() {
         $(".dropdown-menu li a").click(function(){
             var selText = $(this).text();
             $(this).parents('.dropdown').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+            if(lineChart){ lineChart.destroy(); }
+            lineChart = createChart(jsonData[selText].labels, jsonData[selText].axis0, jsonData[selText].axis1);  
             // change chart
         });
     
