@@ -139,13 +139,12 @@ def dashboard():
         cur.execute(query, params)
         response = cur.fetchall()
         
-        user_data['labels'], user_data['axis0'], user_data['axis1'] = zip(*response)
+        user_data['labels'] = [x.isoformat() for x, y, z in response]
+        user_data['axis0']  = [ int(y) for x, y, z in response]
+        user_data['axis1']  = [ int(z) for x, y, z in response]
         
-        date_handler = lambda x: x.isoformat() if isinstance(x, datetime.datetime) else None
-        
-        handler, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
         with open(json_tmp, 'w') as fp:
-            json.dump(user_data, fp, default=date_handler)
+            json.dump(user_data, fp)
         
         session['user-data-json'] = json_tmp.split('/', 2)[2]
         user_data['json_file'] = json_tmp.split('/', 2)[2]
