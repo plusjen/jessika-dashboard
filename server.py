@@ -58,38 +58,38 @@ user_data = {
     
 # # # # # # # # # # # # # # # # # # # # # # # # # # #    
 
-def get_week(date):
+def get_week(thedate):
     """
     Return the full week (Sunday first) of 
     the week containing the given date.
     """
     # turn sunday into 0, monday into 1, etc.
-    day_idx = (date.weekday() + 1) % 7  
-    sunday = date - timedelta(days=day_idx)
+    day_idx = (thedate.weekday() + 1) % 7  
+    sunday = thedate - timedelta(days=day_idx)
     theweek = [sunday + timedelta(days=n) for n in range(7)]
     return theweek
   
   
-def get_month(date):
-    year, month = date.year, date.month
+def get_month(thedate):
+    year, month = thedate.year, thedate.month
     num_days = calendar.monthrange(year, month)[1]
     days = [date(year, month, day) for day in range(1, num_days+1)]
     return days
     
 
-def get_quarter(date):
-    year = date.year
+def get_quarter(thedate):
+    year = thedate.year
     days = []
     for k in range(1, 4 + 1):
-        month = (date.month - 1) % 4 + k
+        month = (thedate.month - 1) % 4 + k
         num_days = calendar.monthrange(year, month)[1]
         for day in range(1, num_days+1):
             days.append( date(year, month, day) )
     return days  
     
-def get_year(date):
-    this_year = date.year
-    next_year = date.year + 1
+def get_year(thedate):
+    this_year = thedate.year
+    next_year = thedate.year + 1
     delta = date(this_year, 1, 1) - date(next_year, 1, 1)
     days = [date(this_year, 1, 1) + timedelta(days=n) for n in range(delta.days + 1)]        
     return days
