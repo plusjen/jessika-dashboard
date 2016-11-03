@@ -142,8 +142,8 @@ def dashboard():
         with open(json_tmp, 'w') as fp:
             json.dump(user_data, fp)
         
-        session['user-data-json'] = json_tmp.split('/', 1)[1]
-        user_data['json_file'] = json_tmp.split('/', 1)[1]
+        session['user-data-json'] = json_tmp.split('/', 2)[2]
+        user_data['json_file'] = json_tmp.split('/', 2)[2]
         
         return render_template('dashboard.html', user=session['profile'], user_data=user_data)
     else:
