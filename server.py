@@ -178,7 +178,7 @@ def dashboard():
         
         now = datetime.now()
         items = ['this week', 'last week', 'this month', 'last month', 'this quater', 'this year']
-        dates = [now, now - timedelta(days=7), now, now - timedelta(months=1), now, now]
+        dates = [now, now - timedelta(days=7), now, now - timedelta(days=30), now, now] # TODO
         generators = [get_week, get_week, get_month, get_month, get_quarter, get_year]
         formatters = ["%a", "%a", "%m %d", "%m %d", "%m %d", "%m %d"]
         
