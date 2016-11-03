@@ -182,8 +182,8 @@ def dashboard():
         generators = [get_week, get_week, get_month, get_month, get_quarter, get_year]
         formatters = ["%a", "%a", "%m %d", "%m %d", "%m %d", "%m %d"]
         
-        conv = {x: y for for x, y, z in response}
-        mesg = {x: z for for x, y, z in response}
+        conv = {x: y for x, y, z in response}
+        mesg = {x: z for x, y, z in response}
         
         for item, thedate, func, fmt in zip(items, dates, generators, formatters):
             the_range = func(thedate)
