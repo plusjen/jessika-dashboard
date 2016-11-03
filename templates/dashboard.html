@@ -14,6 +14,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.min.js"></script>
 
         <script>
+          var datafile   = "{{user_data['json_file']}}";
           var dataLabels = {{user_data['labels'] | tojson}};
           var dataAxis0  = {{user_data['axis0']  | tojson}};
           var dataAxis1  = {{user_data['axis1']  | tojson}};

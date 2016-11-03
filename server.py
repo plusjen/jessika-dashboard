@@ -93,12 +93,12 @@ def dashboard():
     if response:
         
         client = response[0]
-        query = '''SELECT view_client_id FROM dashboard_permissions WHERE client_id = %s '''
+        query = '''SELECT view_client_id FROM dashboard_permissions WHERE client_id = %s ORDER BY 1'''
         cur.execute(query, (client, ))
         response = cur.fetchall()
         clients = [item[0] for item in response]
         
-        client_id = 3
+        client_id = clients[0]
         params  = {'client_id': client_id, }
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
@@ -138,13 +138,12 @@ def dashboard():
         cur.execute(query, params)
         response = cur.fetchall()
         
-        
-        
         handler, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
         with open(json_tmp, 'w') as fp:
             json.dump(user_data, fp)
         
         session['user-data-json'] = json_tmp
+        user_data['json_file'] = json_tmp
         
         return render_template('dashboard.html', user=session['profile'], user_data=user_data)
     else:

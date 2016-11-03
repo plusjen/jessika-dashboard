@@ -1,21 +1,27 @@
 $(document).ready(function() {
     
+    var jsonData;
+
+    $.getJSON(datafile, function(dataItems) {
+        jsonData = dataItems;
+    });
+    
     var data = {
-	    labels : dataLabels,
+	    labels : jsonData.labels, //dataLabels,
 	    datasets : [
 		    {
 			    borderColor : "#67a9cf",
 			    yAxisID: "y-axis-0",
 			    label: "Conversations",
 			    fill : false,
-			    data : dataAxis0,
+			    data : jsonData.axis0, //dataAxis0,
 		    }, 
 		    {
 			    borderColor : "#878787",
 			    yAxisID: "y-axis-1",
 			    label: "Messages",
 			    fill : false,
-			    data : dataAxis1,
+			    data : jsonData.axis0, //dataAxis1,
 		    }
 	    ]
     };
