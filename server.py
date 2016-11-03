@@ -143,8 +143,9 @@ def dashboard():
         user_data['axis0']  = [ int(y) for x, y, z in response]
         user_data['axis1']  = [ int(z) for x, y, z in response]
         
+        handler, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
         with open(json_tmp, 'w') as fp:
-            json.dump(user_data, fp)
+            json.dump(user_data, fp, default=date_handler)
         
         session['user-data-json'] = json_tmp.split('/', 2)[2]
         user_data['json_file'] = json_tmp.split('/', 2)[2]
