@@ -178,7 +178,12 @@ def dashboard():
         
         now = datetime.now()
         items = ['this week', 'last week', 'this month', 'last month', 'this quater', 'this year']
-        dates = [now, now - timedelta(days=7), now, now - timedelta(days=30), now, now] # TODO
+        dates = [now, 
+                 now - timedelta(days=7), 
+                 now, 
+                 now - timedelta(days=calendar.monthrange(now.year, now.month)[1]), 
+                 now, 
+                 now] # TODO
         generators = [get_week, get_week, get_month, get_month, get_quarter, get_year]
         formatters = ["%a", "%a", "%m %d", "%m %d", "%m %d", "%m %d"]
         
@@ -187,7 +192,7 @@ def dashboard():
         
         for item, thedate, func, fmt in zip(items, dates, generators, formatters):
             the_range = func(thedate)
-            labels = [fmt(day) for day in the_range]
+            labels = [day.strftime(fmt) for day in the_range]
             axis0  = [int(conv.get(day, 0)) for day in the_range]
             axis1  = [int(mesg.get(day, 0)) for day in the_range]
             user_data[item] = {'labels': labels, 'axis0': axis0, 'axis1': axis1}
