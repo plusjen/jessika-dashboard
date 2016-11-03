@@ -17,7 +17,7 @@ $(document).ready(function() {
 			        yAxisID: "y-axis-1",
 			        label: "Messages",
 			        fill : false,
-			        data : jsonData.axis0, //dataAxis1,
+			        data : jsonData.axis1, //dataAxis1,
 		        }
 	        ]
         };
