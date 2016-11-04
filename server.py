@@ -176,14 +176,14 @@ def dashboard():
         cur.execute(query, params)
         response = cur.fetchall()
         
-        now = datetime.now()
+        now = datetime.now().date()
         items = ['this week', 'last week', 'this month', 'last month', 'this quater', 'this year']
         dates = [now, 
                  now - timedelta(days=7), 
                  now, 
                  now - timedelta(days=calendar.monthrange(now.year, now.month)[1]), 
                  now, 
-                 now] # TODO
+                 now] 
         generators = [get_week, get_week, get_month, get_month, get_quarter, get_year]
         formatters = ["%a", "%a", "%b %d", "%b %d", "%b %d", "%m %d"]
         
