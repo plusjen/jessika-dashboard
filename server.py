@@ -157,13 +157,12 @@ def dashboard():
         
             
         query = '''SELECT thedate, COUNT(DISTINCT message) FROM (
-                       SELECT DATE(outgoingmessages.timestamp) AS thedate, 
-                              messageid AS message
+                       SELECT DATE(outgoingmessages.timestamp) AS thedate, messageid AS message
                        FROM outgoingmessages 
                        JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
                        WHERE client_id = %(client_id)s
                        
-                       UNION ALL
+                       UNION
                        
                        SELECT DATE(incomingmessages.timestamp) AS thedate, 
                               messageid AS message
