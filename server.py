@@ -81,7 +81,7 @@ def get_quarter(thedate):
     year = thedate.year
     days = []
     for k in range(1, 4 + 1):
-        month = (thedate.month - 1) % 4 + k
+        month = 4 * ((thedate.month - 1) / 4) + k
         num_days = calendar.monthrange(year, month)[1]
         for day in range(1, num_days+1):
             days.append( date(year, month, day) )
@@ -155,9 +155,8 @@ def dashboard():
             user_data[name] = formatter.format(response[0] if response else 0)
         
             
-        query = '''SELECT thedate, COUNT(DISTINCT conversation), COUNT(DISTINCT message) FROM (
+        query = '''SELECT thedate, COUNT(DISTINCT message) FROM (
                        SELECT DATE(outgoingmessages.timestamp) AS thedate, 
-                              conversationid AS conversation, 
                               messageid AS message
                        FROM outgoingmessages 
                        JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
@@ -166,7 +165,6 @@ def dashboard():
                        UNION ALL
                        
                        SELECT DATE(incomingmessages.timestamp) AS thedate, 
-                              conversationid AS conversation, 
                               messageid AS message
                        FROM incomingmessages 
                        JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
@@ -174,7 +172,18 @@ def dashboard():
                    ) t
                    GROUP BY 1 ORDER BY 1'''
         cur.execute(query, params)
-        response = cur.fetchall()
+        messages = cur.fetchall()
+        
+        query = '''SELECT DATE(incomingmessages.timestamp), 
+                          COUNT(DISTINCT incomingmessages.phonenumber)
+                   FROM incomingmessages 
+                   JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
+                   WHERE client_id = %(client_id)s
+                   GROUP BY 1 ORDER BY 1'''
+        cur.execute(query, params)
+        conversations = cur.fetchall()
+        
+        
         
         now = datetime.now().date()
         items = ['this week', 'last week', 'this month', 'last month', 'this quater', 'this year']
@@ -187,8 +196,8 @@ def dashboard():
         generators = [get_week, get_week, get_month, get_month, get_quarter, get_year]
         formatters = ["%a", "%a", "%b %d", "%b %d", "%b %d", "%m %d"]
         
-        conv = {x: y for x, y, z in response}
-        mesg = {x: z for x, y, z in response}
+        conv = {x: y for x, y in conversations}
+        mesg = {x: y for x, y in messages}
         
         for item, thedate, func, fmt in zip(items, dates, generators, formatters):
             the_range = func(thedate)
