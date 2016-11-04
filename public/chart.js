@@ -29,10 +29,9 @@ $(document).ready(function() {
                  },
                 scales: {
                   xAxes: [{
-                    type: 'time',
                     ticks: {
                         autoSkip: true,
-                        maxTicksLimit: 12
+                        maxTicksLimit: 20
                     }
                   }],
                   yAxes: [{
