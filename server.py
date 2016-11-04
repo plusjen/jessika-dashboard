@@ -8,6 +8,7 @@ import urlparse
 import psycopg2
 import psycopg2.extras
 from functools import wraps
+from collections import defaultdict
 from datetime import date, datetime, timedelta
 from flask import Flask, request, session, redirect, render_template, send_from_directory
 from dotenv import Dotenv
@@ -201,9 +202,20 @@ def dashboard():
         
         for item, thedate, func, fmt in zip(items, dates, generators, formatters):
             the_range = func(thedate)
-            labels = [day.strftime(fmt) for day in the_range]
-            axis0  = [int(conv.get(day, 0)) for day in the_range]
-            axis1  = [int(mesg.get(day, 0)) for day in the_range]
+            
+            if item == 'this year':
+                labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']  
+                axis0  = [0 for month in labels]
+                axis1  = [0 for month in labels]
+                for key, val in conv.items():
+                    axis0[key.month - 1] += val
+                for key, val in mesg.items():
+                    axis1[key.month - 1] += val
+            else:
+                axis0  = [int(conv.get(day, 0)) for day in the_range]
+                axis1  = [int(mesg.get(day, 0)) for day in the_range]
+                labels = [day.strftime(fmt) for day in the_range]
+            
             user_data[item] = {'labels': labels, 'axis0': axis0, 'axis1': axis1}
         
         handler, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
