@@ -90,7 +90,7 @@ def get_quarter(thedate):
 def get_year(thedate):
     this_year = thedate.year
     next_year = thedate.year + 1
-    delta = date(this_year, 1, 1) - date(next_year, 1, 1)
+    delta = date(next_year, 1, 1) - date(this_year, 1, 1)
     days = [date(this_year, 1, 1) + timedelta(days=n) for n in range(delta.days + 1)]        
     return days
 

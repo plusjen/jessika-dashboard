@@ -28,6 +28,13 @@ $(document).ready(function() {
                     display: false
                  },
                 scales: {
+                  xAxes: [{
+                    type: 'time',
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 12
+                    }
+                  }],
                   yAxes: [{
                     position: "left",
                     "id": "y-axis-0",
