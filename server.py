@@ -133,6 +133,8 @@ def dashboard():
     if response:
         
         client = response[0]
+        session['profile']['client_id'] = client
+        
         query = '''SELECT view_client_id FROM dashboard_permissions WHERE client_id = %s ORDER BY 1'''
         cur.execute(query, (client, ))
         response = cur.fetchall()
