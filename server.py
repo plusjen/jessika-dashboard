@@ -140,6 +140,7 @@ def dashboard():
                              JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
                              WHERE client_id = %(client_id)s'''] 
         
+        user_data = {}
         for name, query, formatter in zip(names, queries, formatters):
             cur.execute(query, params)
             response = cur.fetchone()
