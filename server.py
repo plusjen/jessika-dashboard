@@ -128,7 +128,7 @@ def dashboard():
         response = cur.fetchall()
         clients = [item[0] for item in response]
         
-        clients_arr = tuple(client)
+        clients_arr = tuple(clients)
         params  = {'clients_arr': clients_arr, }
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
