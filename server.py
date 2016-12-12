@@ -128,17 +128,17 @@ def dashboard():
         response = cur.fetchall()
         clients = [item[0] for item in response]
         
-        client_id = client
-        params  = {'client_id': client_id, }
+        clients_arr = tuple(client)
+        params  = {'clients_arr': clients_arr, }
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
-        queries = ['''SELECT amount FROM processed_payments WHERE consumer_id = %(client_id)s''', 
+        queries = ['''SELECT amount FROM processed_payments WHERE consumer_id IN %(clients_arr)s''', 
                    '''SELECT COUNT(DISTINCT from_phonenumber) FROM outgoingmessages 
                              JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
-                             WHERE client_id = %(client_id)s''',
+                             WHERE client_id IN %(clients_arr)s''',
                    '''SELECT COUNT(DISTINCT to_phonenumber) FROM incomingmessages 
                              JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
-                             WHERE client_id = %(client_id)s'''] 
+                             WHERE client_id IN %(clients_arr)s'''] 
         
         user_data = {}
         for name, query, formatter in zip(names, queries, formatters):
@@ -151,14 +151,14 @@ def dashboard():
                        SELECT DATE(outgoingmessages.timestamp) AS thedate, messageid AS message
                        FROM outgoingmessages 
                        JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
-                       WHERE client_id = %(client_id)s
+                       WHERE client_id IN %(clients_arr)s
                        
                        UNION
                        
                        SELECT DATE(incomingmessages.timestamp) AS thedate, messageid AS message
                        FROM incomingmessages 
                        JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
-                       WHERE client_id = %(client_id)s
+                       WHERE client_id IN %(clients_arr)s
                    ) t
                    GROUP BY 1 ORDER BY 1'''
         cur.execute(query, params)
@@ -168,7 +168,7 @@ def dashboard():
                           COUNT(DISTINCT incomingmessages.phonenumber)
                    FROM incomingmessages 
                    JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
-                   WHERE client_id = %(client_id)s
+                   WHERE client_id IN %(clients_arr)s
                    GROUP BY 1 ORDER BY 1'''
         cur.execute(query, params)
         conversations = cur.fetchall()
