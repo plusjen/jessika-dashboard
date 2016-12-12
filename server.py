@@ -132,7 +132,7 @@ def dashboard():
         params  = {'clients_arr': clients_arr, }
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
-        queries = ['''SELECT amount FROM processed_payments WHERE consumer_id IN %(clients_arr)s''', 
+        queries = ['''SELECT SUM(amount) FROM processed_payments WHERE consumer_id IN %(clients_arr)s''', 
                    '''SELECT COUNT(DISTINCT from_phonenumber) FROM outgoingmessages 
                              JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
                              WHERE client_id IN %(clients_arr)s''',
