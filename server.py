@@ -133,10 +133,10 @@ def dashboard():
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
         queries = ['''SELECT SUM(amount) FROM processed_payments WHERE consumer_id IN %(clients_arr)s''', 
-                   '''SELECT COUNT(DISTINCT from_phonenumber) FROM outgoingmessages 
+                   '''SELECT COUNT(DISTINCT phonenumber) FROM outgoingmessages 
                              JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
                              WHERE client_id IN %(clients_arr)s''',
-                   '''SELECT COUNT(DISTINCT to_phonenumber) FROM incomingmessages 
+                   '''SELECT COUNT(DISTINCT phonenumber) FROM incomingmessages 
                              JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
                              WHERE client_id IN %(clients_arr)s'''] 
         
