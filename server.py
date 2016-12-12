@@ -118,7 +118,7 @@ def dashboard():
     cur.execute(query, (user_id, ))
     response = cur.fetchone()
     
-    if response:
+    if False:
         
         client = response[0]
         session['profile']['client_id'] = client
@@ -129,8 +129,6 @@ def dashboard():
         clients = [item[0] for item in response]
         
         clients_arr = tuple(clients)
-        print(clients_arr)
-        assert 0, clients_arr
         params  = {'clients_arr': clients_arr, }
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
