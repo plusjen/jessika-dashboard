@@ -130,6 +130,7 @@ def dashboard():
         
         clients_arr = tuple(clients)
         print(clients_arr)
+        assert 0, clients_arr
         params  = {'clients_arr': clients_arr, }
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
