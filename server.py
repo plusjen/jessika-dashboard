@@ -45,20 +45,8 @@ conn = psycopg2.connect(
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# temporary
-user_data = {
-        'labels': ["Oct1", "Oct4", "Oct7", "Oct10", "Oct13", "Oct16", "Oct19", "Oct22", "Oct25", "Oct28",  "Oct31"],
-        'axis0' : [203,156,99,251,305,247, 300, 260, 210, 270, 200],
-        'axis1' : [303,196,28,201,150,120, 200, 230, 260, 230, 200],
-        
-        'trr': '$250.00',
-        'tcr': 59,
-        'tc' : 92,
-        'art': '34 sec'
-    }
-    
-# # # # # # # # # # # # # # # # # # # # # # # # # # #    
 
+    
 def get_week(thedate):
     """
     Return the full week (Sunday first) of 
@@ -140,7 +128,7 @@ def dashboard():
         response = cur.fetchall()
         clients = [item[0] for item in response]
         
-        client_id = clients[0]
+        client_id = client
         params  = {'client_id': client_id, }
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
@@ -166,8 +154,7 @@ def dashboard():
                        
                        UNION
                        
-                       SELECT DATE(incomingmessages.timestamp) AS thedate, 
-                              messageid AS message
+                       SELECT DATE(incomingmessages.timestamp) AS thedate, messageid AS message
                        FROM incomingmessages 
                        JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
                        WHERE client_id = %(client_id)s
