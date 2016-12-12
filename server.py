@@ -129,6 +129,7 @@ def dashboard():
         clients = [item[0] for item in response]
         
         clients_arr = tuple(clients)
+        return clients_arr
         params  = {'clients_arr': clients_arr, }
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
