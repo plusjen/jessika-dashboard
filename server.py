@@ -118,7 +118,7 @@ def dashboard():
     cur.execute(query, (user_id, ))
     response = cur.fetchone()
     
-    if False:
+    if response:
         
         client = response[0]
         session['profile']['client_id'] = client
