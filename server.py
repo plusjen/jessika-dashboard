@@ -133,15 +133,17 @@ def dashboard():
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
         queries = ['''SELECT DATE(timestamp), SUM(amount) FROM processed_payments 
-                      WHERE consumer_id IN %(clients_arr)s AND YEAR(timestamp) = YEAR(NOW())
+                      WHERE consumer_id IN %(clients_arr)s AND EXTRACT('year' from timestamp) = EXTRACT('year' from NOW())
                       GROUP BY 1 ORDER BY 1''', 
                    '''SELECT DATE(outgoingmessages.timestamp),COUNT(DISTINCT phonenumber) FROM outgoingmessages 
                              JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
-                             WHERE client_id IN %(clients_arr)s  AND YEAR(outgoingmessages.timestamp) = YEAR(NOW())
+                             WHERE client_id IN %(clients_arr)s  AND 
+                             EXTRACT('year' from outgoingmessages.timestamp) = EXTRACT('year' from NOW())
                              GROUP BY 1 ORDER BY 1''',
                    '''SELECT DATE(incomingmessages.timestamp),COUNT(DISTINCT phonenumber) FROM incomingmessages 
                              JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
-                             WHERE client_id IN %(clients_arr)s  AND YEAR(incomingmessages.timestamp) = YEAR(NOW())
+                             WHERE client_id IN %(clients_arr)s  AND 
+                             EXTRACT('year' from incomingmessages.timestamp) = EXTRACT('year' from NOW())
                              GROUP BY 1 ORDER BY 1'''] 
         
         numbers_data = {}
@@ -154,14 +156,16 @@ def dashboard():
                        SELECT DATE(outgoingmessages.timestamp) AS thedate, messageid AS message
                        FROM outgoingmessages 
                        JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
-                       WHERE client_id IN %(clients_arr)s AND YEAR(outgoingmessages.timestamp) = YEAR(NOW())
+                       WHERE client_id IN %(clients_arr)s AND 
+                       EXTRACT('year' from outgoingmessages.timestamp) = EXTRACT('year' from NOW())
                        
                        UNION
                        
                        SELECT DATE(incomingmessages.timestamp) AS thedate, messageid AS message
                        FROM incomingmessages 
                        JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
-                       WHERE client_id IN %(clients_arr)s AND YEAR(incomingmessages.timestamp) = YEAR(NOW())
+                       WHERE client_id IN %(clients_arr)s AND 
+                       EXTRACT('year' from incomingmessages.timestamp) = EXTRACT('year' from NOW())
                    ) t
                    GROUP BY 1 ORDER BY 1'''
         cur.execute(query, params)
@@ -171,7 +175,8 @@ def dashboard():
                           COUNT(DISTINCT incomingmessages.phonenumber)
                    FROM incomingmessages 
                    JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
-                   WHERE client_id IN %(clients_arr)s AND YEAR(incomingmessages.timestamp) = YEAR(NOW())
+                   WHERE client_id IN %(clients_arr)s AND 
+                   EXTRACT('year' from incomingmessages.timestamp) = EXTRACT('year' from NOW())
                    GROUP BY 1 ORDER BY 1'''
         cur.execute(query, params)
         conversations = cur.fetchall()
