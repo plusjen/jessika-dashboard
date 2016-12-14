@@ -149,7 +149,7 @@ def dashboard():
         numbers_data = {}
         for name, query, formatter in zip(names, queries, formatters):
             cur.execute(query, params)
-            response = cur.fetcall()
+            response = cur.fetchall()
             numbers_data[name] = {x: y for x, y in response}
             
         query = '''SELECT thedate, COUNT(DISTINCT message) FROM (
