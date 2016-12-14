@@ -132,33 +132,36 @@ def dashboard():
         params  = {'clients_arr': clients_arr, }
         names   = ['trr', 'tcr', 'tc']
         formatters = ["${:.2f}", "{}", "{}"]
-        queries = ['''SELECT SUM(amount) FROM processed_payments WHERE consumer_id IN %(clients_arr)s''', 
-                   '''SELECT COUNT(DISTINCT phonenumber) FROM outgoingmessages 
+        queries = ['''SELECT DATE(timestamp), SUM(amount) FROM processed_payments 
+                      WHERE consumer_id IN %(clients_arr)s AND YEAR(timestamp) = YEAR(NOW())
+                      GROUP BY 1 ORDER BY 1''', 
+                   '''SELECT DATE(outgoingmessages.timestamp),COUNT(DISTINCT phonenumber) FROM outgoingmessages 
                              JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
-                             WHERE client_id IN %(clients_arr)s''',
-                   '''SELECT COUNT(DISTINCT phonenumber) FROM incomingmessages 
+                             WHERE client_id IN %(clients_arr)s  AND YEAR(outgoingmessages.timestamp) = YEAR(NOW())
+                             GROUP BY 1 ORDER BY 1''',
+                   '''SELECT DATE(incomingmessages.timestamp),COUNT(DISTINCT phonenumber) FROM incomingmessages 
                              JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
-                             WHERE client_id IN %(clients_arr)s'''] 
+                             WHERE client_id IN %(clients_arr)s  AND YEAR(incomingmessages.timestamp) = YEAR(NOW())
+                             GROUP BY 1 ORDER BY 1'''] 
         
-        user_data = {}
+        numbers_data = {}
         for name, query, formatter in zip(names, queries, formatters):
             cur.execute(query, params)
-            response = cur.fetchone()
-            user_data[name] = formatter.format(response[0] if response else 0)
-        
+            response = cur.fetcall()
+            numbers_data[name] = {x: y for x, y in response}
             
         query = '''SELECT thedate, COUNT(DISTINCT message) FROM (
                        SELECT DATE(outgoingmessages.timestamp) AS thedate, messageid AS message
                        FROM outgoingmessages 
                        JOIN consumers ON consumers.phonenumber = outgoingmessages.phonenumber
-                       WHERE client_id IN %(clients_arr)s
+                       WHERE client_id IN %(clients_arr)s AND YEAR(outgoingmessages.timestamp) = YEAR(NOW())
                        
                        UNION
                        
                        SELECT DATE(incomingmessages.timestamp) AS thedate, messageid AS message
                        FROM incomingmessages 
                        JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
-                       WHERE client_id IN %(clients_arr)s
+                       WHERE client_id IN %(clients_arr)s AND YEAR(incomingmessages.timestamp) = YEAR(NOW())
                    ) t
                    GROUP BY 1 ORDER BY 1'''
         cur.execute(query, params)
@@ -168,12 +171,12 @@ def dashboard():
                           COUNT(DISTINCT incomingmessages.phonenumber)
                    FROM incomingmessages 
                    JOIN consumers ON consumers.phonenumber = incomingmessages.phonenumber
-                   WHERE client_id IN %(clients_arr)s
+                   WHERE client_id IN %(clients_arr)s AND YEAR(incomingmessages.timestamp) = YEAR(NOW())
                    GROUP BY 1 ORDER BY 1'''
         cur.execute(query, params)
         conversations = cur.fetchall()
         
-        
+        user_data = {}
         
         now = datetime.now().date()
         items = ['this week', 'last week', 'this month', 'last month', 'this quater', 'this year']
@@ -206,6 +209,14 @@ def dashboard():
                 labels = [day.strftime(fmt) for day in the_range]
             
             user_data[item] = {'labels': labels, 'axis0': axis0, 'axis1': axis1}
+            
+            if item == 'this year':
+                for name in numbers_data:
+                    user_data[item][name] = sum(numbers_data[name].values())
+            else:
+                for name in numbers_data:
+                    user_data[item][name] = sum(numbers_data[name].get(day, 0) for day in the_range)
+            
         
         handler, json_tmp = tempfile.mkstemp(suffix='.json', prefix='user_data_', dir='public')
         with open(json_tmp, 'w') as fp:

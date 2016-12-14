@@ -91,6 +91,8 @@ $(document).ready(function() {
             if(lineChart){ lineChart.destroy(); }
             lineChart = createChart(jsonData[selText].labels, jsonData[selText].axis0, jsonData[selText].axis1);  
             // change chart
+            $('tcr').text(jsonData[selText].tcr);
+            $('tc').text(jsonData[selText].tc);
         });
     
     };
