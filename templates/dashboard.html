@@ -74,26 +74,26 @@
             <div class="col-md-2 tile_stats_count">
               <div class="count_top"> Total</div>
               <div class="count_top">Revenue Recovered</div>
-              <div class="count">{{user_data['trr']}}</div>
+              <div class="count">{{user_data['this month']['trr']}}</div>
             </div>
             -->
             
             <div class="col-md-2 tile_stats_count">
               <div class="count_top"> Total</div>
               <div class="count_top">Customers Reached</div>
-              <div class="count">{{user_data['tcr']}}</div>
+              <div class="count" id="tcr">{{user_data['this month']['tcr']}}</div>
             </div>
             
             <div class="col-md-2 tile_stats_count">
               <div class="count_top"> Total</div>
               <div class="count_top">Conversations</div>
-              <div class="count">{{user_data['tc']}}</div>
+              <div class="count" id="tc">{{user_data['this month']['tc']}}</div>
             </div>
             <!--
             <div class="col-md-2 tile_stats_count">
               <div class="count_top">Average </div>
               <div class="count_top">Response Time</div>
-              <div class="count">{{user_data['art']}}</div>
+              <div class="count">{{user_data['this month']['art']}}</div>
             </div>
             -->
           </div>
