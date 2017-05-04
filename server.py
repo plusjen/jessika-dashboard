@@ -34,7 +34,7 @@ app.debug = True
 
 # database connection
 urlparse.uses_netloc.append("postgres")
-url = urlparse.urlparse(os.environ["DATABASE_URL"])
+url = urlparse.urlparse(os.environ["HEROKU_POSTGRESQL_WHITE_URL"])
 conn = psycopg2.connect(
    database=url.path[1:],
    user=url.username,
@@ -42,6 +42,8 @@ conn = psycopg2.connect(
    host=url.hostname,
    port=url.port
 )
+
+'postgresql-concave-21250'
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
